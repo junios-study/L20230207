@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMyRocket::AMyRocket()
@@ -45,14 +46,40 @@ void AMyRocket::BeginPlay()
 
 void AMyRocket::ProcessBeginOverLap(AActor* OverlappedActor, AActor* OtherActor)
 {
+	//CallToBP();
+	CallToBPNative();
+
 	UE_LOG(LogTemp, Warning, TEXT("Rocket %s"), *OtherActor->GetName());
 	Destroy();
+
+	if (ParticleTemplate)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
+			ParticleTemplate,
+			GetActorLocation(),
+			FRotator::ZeroRotator);
+	}
+	if (ExplosionSound)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(),
+			ExplosionSound,
+			GetActorLocation());
+	}
 }
 
 // Called every frame
 void AMyRocket::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void AMyRocket::PrintHelloWorld()
+{
+	UE_LOG(LogTemp, Error, TEXT("Hello World"));
+}
+
+void AMyRocket::CallToBPNative_Implementation()
+{
+	UE_LOG(LogClass, Warning, TEXT("이건 블루프린트 네이티브"));
 }
 
