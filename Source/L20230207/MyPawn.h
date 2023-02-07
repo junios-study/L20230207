@@ -75,4 +75,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Input", BlueprintReadWrite)
 	class UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, Category = "Data", BlueprintReadWrite)
+	TSubclassOf<class AMyRocket> RocketTemplate;
 };

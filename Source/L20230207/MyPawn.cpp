@@ -20,7 +20,7 @@
 // Sets default values
 AMyPawn::AMyPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
@@ -89,7 +89,7 @@ AMyPawn::AMyPawn()
 void AMyPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//APlayerController* PC = Cast<APlayerController>(GetController());
 	if (PC && InputContext)
@@ -140,11 +140,15 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMyPawn::Rotation(const FInputActionValue& Value)
 {
+	FVector2D Vector = Value.Get<FVector2D>();
 
+	AddActorLocalRotation(FRotator(Vector.X,
+		0,
+		-Vector.Y) * UGameplayStatics::GetWorldDeltaSeconds(GetWorld()) * 60);
 }
 
 void AMyPawn::Fire(const FInputActionValue& Value)
 {
-	GetWorld()->SpawnActor<AMyRocket>(AMyRocket::StaticClass(), Arrow->K2_GetComponentToWorld());
+	GetWorld()->SpawnActor<AActor>(RocketTemplate, Arrow->K2_GetComponentToWorld());
 }
 
