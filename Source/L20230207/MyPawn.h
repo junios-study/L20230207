@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-
+#include "InputActionValue.h"
 
 #include "MyPawn.generated.h"
 
@@ -35,6 +35,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Rotation(const FInputActionValue& Value);
+
+	void Fire(const FInputActionValue& Value);
+
 	UPROPERTY(VisibleAnywhere, Category = "Components", BlueprintReadOnly)
 	UBoxComponent* Box;
 
@@ -59,4 +63,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Components", BlueprintReadOnly)
 	UFloatingPawnMovement* Movement;
 
+
+	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	class UInputMappingContext* InputContext;
+
+
+	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	class UInputAction* RotationAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	class UInputAction* FireAction;
 };

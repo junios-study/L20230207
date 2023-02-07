@@ -8,6 +8,12 @@
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+
+#include "Kismet/GameplayStatics.h"
+
+
 
 
 // Sets default values
@@ -59,12 +65,40 @@ AMyPawn::AMyPawn()
 	Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
 	Movement->MaxSpeed = 400.0f;
 
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> IA_Rotation(TEXT("/Script/EnhancedInput.InputAction'/Game/Blueprints/Input/IA_Rotation.IA_Rotation'"));
+	if (IA_Rotation.Succeeded())
+	{
+		RotationAction = IA_Rotation.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> IA_Fire(TEXT("/Script/EnhancedInput.InputAction'/Game/Blueprints/Input/IA_Fire.IA_Fire'"));
+	if (IA_Fire.Succeeded())
+	{
+		FireAction = IA_Fire.Object;
+	}
+
+	//static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMC_Input(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Blueprints/Input/IMC_Input.IMC_Input'"));
+	//if (IMC_Input.Succeeded())
+	//{
+	//	InputContext = IMC_Input.Object;
+	//}
 }
 
 // Called when the game starts or when spawned
 void AMyPawn::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC && InputContext)
+	{
+		UEnhancedInputLocalPlayerSubsystem* System = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+		if (System)
+		{
+			System->AddMappingContext(InputContext, 0);
+		}
+	}
 	
 }
 
@@ -84,6 +118,24 @@ void AMyPawn::Tick(float DeltaTime)
 void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+
+	UEnhancedInputComponent* InputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (InputComponent)
+	{
+		InputComponent->BindAction(RotationAction, ETriggerEvent::Triggered, this, &AMyPawn::Rotation);
+		InputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyPawn::Fire);
+
+	}
+}
+
+void AMyPawn::Rotation(const FInputActionValue& Value)
+{
+
+}
+
+void AMyPawn::Fire(const FInputActionValue& Value)
+{
 
 }
 
