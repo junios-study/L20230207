@@ -32,6 +32,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void RotatePropeller(UStaticMeshComponent* Where);
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -64,13 +66,13 @@ public:
 	UFloatingPawnMovement* Movement;
 
 
-	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Input", BlueprintReadWrite)
 	class UInputMappingContext* InputContext;
 
 
-	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Input", BlueprintReadWrite)
 	class UInputAction* RotationAction;
 
-	UPROPERTY(VisibleAnywhere, Category = "Input", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Input", BlueprintReadWrite)
 	class UInputAction* FireAction;
 };

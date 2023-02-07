@@ -10,6 +10,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "MyRocket.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -77,7 +78,7 @@ AMyPawn::AMyPawn()
 		FireAction = IA_Fire.Object;
 	}
 
-	//static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMC_Input(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Blueprints/Input/IMC_Input.IMC_Input'"));
+	//static ConstructorHelpers::FObjectFinder<UDataAsset> IMC_Input(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Blueprints/Input/IMC_Input.IMC_Input'"));
 	//if (IMC_Input.Succeeded())
 	//{
 	//	InputContext = IMC_Input.Object;
@@ -99,8 +100,9 @@ void AMyPawn::BeginPlay()
 			System->AddMappingContext(InputContext, 0);
 		}
 	}
-	
 }
+
+
 
 // Called every frame
 void AMyPawn::Tick(float DeltaTime)
@@ -109,9 +111,16 @@ void AMyPawn::Tick(float DeltaTime)
 
 	AddMovementInput(GetActorForwardVector(), 1.0f);
 
-	Left->AddLocalRotation(FRotator(0, 0, 3600 * DeltaTime));
-	Right->AddLocalRotation(FRotator(0, 0, 3600 * DeltaTime));
+	//Left->AddLocalRotation(FRotator(0, 0, 3600 * DeltaTime));
+	//Right->AddLocalRotation(FRotator(0, 0, 3600 * DeltaTime));
+	RotatePropeller(Left);
+	RotatePropeller(Right);
 
+}
+
+void AMyPawn::RotatePropeller(UStaticMeshComponent* Where)
+{
+	Where->AddLocalRotation(FRotator(0, 0, 3600 * UGameplayStatics::GetWorldDeltaSeconds(GetWorld())));
 }
 
 // Called to bind functionality to input
@@ -124,8 +133,8 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (EInputComponent)
 	{
 		EInputComponent->BindAction(RotationAction, ETriggerEvent::Triggered, this, &AMyPawn::Rotation);
-		EInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyPawn::Fire);
 
+		EInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyPawn::Fire);
 	}
 }
 
@@ -136,6 +145,6 @@ void AMyPawn::Rotation(const FInputActionValue& Value)
 
 void AMyPawn::Fire(const FInputActionValue& Value)
 {
-
+	GetWorld()->SpawnActor<AMyRocket>(AMyRocket::StaticClass(), Arrow->K2_GetComponentToWorld());
 }
 
