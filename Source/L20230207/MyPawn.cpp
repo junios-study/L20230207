@@ -120,11 +120,11 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
-	UEnhancedInputComponent* InputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (InputComponent)
+	UEnhancedInputComponent* EInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (EInputComponent)
 	{
-		InputComponent->BindAction(RotationAction, ETriggerEvent::Triggered, this, &AMyPawn::Rotation);
-		InputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyPawn::Fire);
+		EInputComponent->BindAction(RotationAction, ETriggerEvent::Triggered, this, &AMyPawn::Rotation);
+		EInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyPawn::Fire);
 
 	}
 }
